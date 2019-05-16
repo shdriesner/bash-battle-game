@@ -9,17 +9,9 @@
 
 # list of possible opponents
 opponents=(
-    'Orc'
-    'Stick monster'
-    'Giant Slug'
-    'Zombie'
-    'Fighting Bear'
-    'Palladin'
-    'Werewolf'
-    'Monster'
-    'Vampire'
-    'Mummy'
-    'Bureaucrat'
+    'Orc' 'Stick monster' 'Giant Slug' 'Zombie'
+    'Fighting Bear' 'Palladin' 'Werewolf' 'Monster'
+    'Vampire' 'Mummy' 'Bureaucrat'
 )
 
 # get-rand-num requires a modulus ($1) and offset ($2)
@@ -35,17 +27,10 @@ ph=$(get-rand-num 10 20)
 boost=20
 
 #Start
-while true
-do
+while true; do
     read -rp "What is your name? " n
-    if [ -z "${n}" ]
-    then
-        echo "Please type a non-empty name"
-        continue
-    fi
-    break
+    if [ -z "${n}" ]; then echo "Please type a non-empty name"; else break; fi
 done
-
 echo "${n}'s opponent is ... the ${opponents[${id}]}!"
 
 #The program loop begins
@@ -54,45 +39,35 @@ while [ "${ph}" -gt 0 ] && [ "${oh}" -gt 0 ]; do
     echo "${n}'s health is ${ph}."
     echo "The ${opponents[${id}]}'s health is ${oh}."
     echo
-    read -rp "Hit Enter to attack, type 'q' to quit, or type 'p' to use +${boost} health potion: " movement
+    echo -n "Hit Enter to attack"
+    [ "${boost}" -gt 0 ] && echo -n ", type 'p' to use +${boost} health potion"
+    read -rp ", or type 'q' to quit: " movement
     echo
-    case ${movement,,} in
-        p*)
-            if [ ${boost} -gt 0 ]
-            then
-	        echo "${n} drinks the Health potion! (+${boost} health)"
-	        ph=$((ph + boost))
-                boost=0
-            else
+    case "${movement,,}" in
+        p*) [ "${boost}" -gt 0 ] && \
+	        echo "${n} drinks the Health potion! (+${boost} health)" || \
 	        echo "Oh no, ${n} is out of potions!"
-            fi;;
-        q*)
-            echo "${n} runs away!"
-            exit 0;;
-        *)
-            pd=$(get-rand-num 5 1)
+	    ph=$((ph + boost)); boost=0;;
+        q*) echo "${n} runs away!" && exit 0;;
+        *)  pd=$(get-rand-num 5 1)
             [ "${pd}" -gt "${oh}" ] && pd="${oh}"
-	    echo "You attack ${opponents[${id}]} with ${pd} hit points!"
+	    echo "You attack ${opponents[${id}]} with ${pd} hit point(s)!"
 	    oh=$((oh - pd));;
     esac
     # opponent always attacks
     od=$(get-rand-num 5 1)
     [ "${od}" -gt "${ph}" ] && od="${ph}"
-    echo "${opponents[${id}]} attacks with ${od} hit points!"
+    echo "${opponents[${id}]} attacks with ${od} hit point(s)!"
     ph=$((ph - od))
 done
 
-echo "================================================="
+echo "=============================================================="
 if [ "${oh}" -eq "${ph}" ]; then
-    echo " ${n} tied the ${opponents[${id}]} with ${ph} points left!"
-    echo " We'll call it a draw!"
+    echo " We'll call it a draw! ${n} and the ${opponents[${id}]} have ${ph} point(s) left!"
 elif [ "${oh}" -lt 1 ]; then
-    echo " You defeated the ${opponents[${id}]}!"
-    echo " ${n} wins with ${ph} points left!"
+    echo " Victory! ${n} defeated the ${opponents[${id}]} with ${ph} point(s) left!"
 else
-    echo " Oh no! ${n} has ${ph} health left!"
-    echo " Game over!"
+    echo " Oh no! ${n} was defeated by the ${opponents[${id}]}!"
 fi
-echo "================================================="
-
-exit 0
+echo "=============================================================="
+exit "$?"
