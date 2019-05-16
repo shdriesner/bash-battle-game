@@ -2,7 +2,7 @@
 ######
 #
 # original code: https://www.reddit.com/r/linux/comments/bpa0fk/my_11_year_old_son_wrote_a_game_in_bash_shell_on/
-# I have taken this and cleaned it up. ALl original credit to original author.
+# I have taken this and cleaned it up. All original credit to original author.
 # Consider this as public domain code.
 #
 ######
@@ -11,9 +11,15 @@
 opponents=(
     'Orc'
     'Stick monster'
-    'Giant slug'
+    'Giant Slug'
     'Zombie'
-    'Fighting bear'
+    'Fighting Bear'
+    'Palladin'
+    'Werewolf'
+    'Monster'
+    'Vampire'
+    'Mummy'
+    'Bureaucrat'
 )
 
 # get-rand-num requires a modulus ($1) and offset ($2)
@@ -32,7 +38,7 @@ boost=20
 while true
 do
     read -p "What is your name? " n
-    [ ! -z "${n}" ] && break
+    [ -z "${n}" ] && echo "Please type a non-empty name" || break
 done
 
 echo "${n}'s opponent is ... the ${opponents[${ranoppo}]}!"
@@ -71,14 +77,14 @@ while [ ${playerhealth} -gt 0 ] && [ ${oppohealth} -gt 0 ]; do
     playerhealth=$((playerhealth - oppodam))
 done
 
-echo "====================================="
+echo "==========================================="
 if [ ${oppohealth} -lt 1 ]; then
-    echo "  You defeated the ${opponents[${ranoppo}]}!"
-    echo "  ${n} wins with ${playerhealth} points left!"
+    echo " You defeated the ${opponents[${ranoppo}]}!"
+    echo " ${n} wins with ${playerhealth} points left!"
 else
-    echo "  Oh no! ${n} has ${playerhealth} health left!"
-    echo "  Game over!"
+    echo " Oh no! ${n} has ${playerhealth} health left!"
+    echo " Game over!"
 fi
-echo "====================================="
+echo "==========================================="
 
 exit 0
